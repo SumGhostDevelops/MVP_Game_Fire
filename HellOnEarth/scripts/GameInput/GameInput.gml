@@ -1,16 +1,19 @@
 function GameInput()
 {
-	if(keyboard_check_pressed("W"))
-	{
-		
-	}
-	if(keyboard_check_pressed("A"))
+	// W
+	if(keyboard_check_pressed(vk_up))
 	{
 	}
-	if(keyboard_check_pressed("S"))
+	// S
+	if(keyboard_check_pressed(vk_down))
 	{
 	}
-	if(keyboard_check_pressed("D"))
+	// A
+	if(keyboard_check_pressed(vk_left))
+	{
+	}
+	// D
+	if(keyboard_check_pressed(vk_right))
 	{
 	}
 }
