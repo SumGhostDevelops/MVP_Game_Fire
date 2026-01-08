@@ -4,6 +4,16 @@ function Jump()
 
 function Crouch()
 {
+	tmp = 10
+	MIN_SPEED_SLIDE = 15
+	
+	if(tmp > MIN_SPEED_SLIDE)
+	{	
+		Slide();
+		return;
+	}
+	
+	
 }
 
 function Slide()
