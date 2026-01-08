@@ -36,6 +36,7 @@
   "name":"HellOnEarth",
   "resources":[
     {"id":{"name":"Room1","path":"rooms/Room1/Room1.yy",},},
+    {"id":{"name":"GameInput","path":"scripts/GameInput/GameInput.yy",},},
   ],
   "resourceType":"GMProject",
   "resourceVersion":"2.0",
