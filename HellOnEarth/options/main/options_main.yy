@@ -3,7 +3,11 @@
   "%Name":"Main",
   "name":"Main",
   "option_audio_error_behaviour":false,
+<<<<<<< HEAD
   "option_author":"SumGhost",
+=======
+  "option_author":"DerjenigeUberMensch",
+>>>>>>> 353bdfb1e83079e6dbc897e1ba40ca6ae3ae7862
   "option_collision_compatibility":false,
   "option_copy_on_write_enabled":false,
   "option_draw_colour":4294967295,
@@ -16,7 +20,11 @@
   "option_mips_for_3d_textures":false,
   "option_remove_unused_assets":true,
   "option_sci_usesci":true,
+<<<<<<< HEAD
   "option_spine_licence":true,
+=======
+  "option_spine_licence":false,
+>>>>>>> 353bdfb1e83079e6dbc897e1ba40ca6ae3ae7862
   "option_steam_app_id":"0",
   "option_template_description":null,
   "option_template_icon":"${base_options_dir}/main/template_icon.png",
