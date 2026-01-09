@@ -1,5 +1,5 @@
 {
-  "$GMSprite":"",
+  "$GMSprite":"v2",
   "%Name":"Sprite2",
   "bboxMode":0,
   "bbox_bottom":58,
@@ -12,7 +12,7 @@
   "edgeFiltering":false,
   "For3D":false,
   "frames":[
-    {"$GMSpriteFrame":"","%Name":"46ca5736-6c1e-4b7d-adab-7d61869508dd","name":"46ca5736-6c1e-4b7d-adab-7d61869508dd","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"46ca5736-6c1e-4b7d-adab-7d61869508dd","name":"46ca5736-6c1e-4b7d-adab-7d61869508dd","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
   "gridX":0,
   "gridY":0,
@@ -25,8 +25,8 @@
   "nineSlice":null,
   "origin":0,
   "parent":{
-    "name":"HellOnEarth",
-    "path":"HellOnEarth.yyp",
+    "name":"Sprites",
+    "path":"folders/Sprites.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",
