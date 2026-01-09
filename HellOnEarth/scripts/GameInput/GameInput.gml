@@ -1,6 +1,8 @@
-function Jump()
-{
-}
+
+
+
+
+
 
 function Crouch()
 {
@@ -24,38 +26,43 @@ function MouseInput()
 {
 }
 
-function WASD()
+function controlsSetup(){
+	bufferTime = 5;
+	jumpKeyBuffered = 0;
+	jumpKeyBufferedTimer = 0;
+	
+}
+function Jump()
 {
-	// W
-	if(keyboard_check_pressed(vk_up))
-	{	Jump();
+	if(jumpKeyPressed)
+	{	
+		jumpKeyBufferedTimer = bufferTime;
+	
+	
 	}
+	
+	if(jumpKeyBufferedTimer > 0){
+		jumpKeyBuffered = 1;
+		jumpKeyBufferedTimer--;
+	}else{
+	jumpKeyBuffered = 0;
+	}
+}
+function getControls()
+{
+	//Inputs
+	rightKey  = keyboard_check(vk_right) + keyboard_check(ord("D"));
+		rightKey = clamp(rightKey, 0, 1);
+	leftKey = keyboard_check(vk_left)+ keyboard_check(ord("A"));
+		leftKey = clamp(leftKey, 0, 1);
+	jumpKeyPressed = keyboard_check_pressed(vk_space);
+	jumpKey = keyboard_check(vk_space);
+	//buffer
+Jump();
 	// S
 	if(keyboard_check_pressed(vk_down))
-	{	Crouch()
+	{	Crouch();
 	}
-	// A
-	if(keyboard_check_pressed(vk_left))
-	{
-	}
-	// D
-	if(keyboard_check_pressed(vk_right))
-	{
-	}
-}
 
 
-function Special()
-{
-	// Space Bar
-	if(keyboard_check_pressed(vk_space))
-	{	Jump();
-	}
-}
-
-function GameInput()
-{
-	MouseInput();
-	WASD();
-	Special();
 }
