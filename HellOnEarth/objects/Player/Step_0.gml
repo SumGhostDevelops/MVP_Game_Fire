@@ -31,7 +31,20 @@ x+= xSpd;
 
 //Y Pos
 // Gravity
+if (coyoteHangTimer > 0)
+{
+coyoteHangTimer--;
+
+}else{
+
+
 ySpd += GRAV;
+
+setOnGround(false);
+
+}
+
+
 
 // terminal velocity
 if (ySpd > TERM_VEL){
@@ -42,8 +55,9 @@ if(Grounded){
 	
 	jumpCount = 0;
 	jumpHoldTimer = 0;
+	coyoteJumpTimer = coyoteJumpFrames;
 	}else{
-	if(jumpCount == 0){ jumpCount = 1;};
+	if(jumpCount == 0 && coyoteJumpTimer <= 0){ jumpCount = 1;};
 	
 	}
 //jump
@@ -54,6 +68,8 @@ if(Grounded){
 		jumpCount++;
 		
 		jumpHoldTimer = jumpHoldFrames[jumpCount - 1];
+		setOnGround(false);
+		
 	}
 	
 
@@ -82,9 +98,7 @@ if(Grounded){
 	}
 	//sets grounded
 	if (ySpd >= 0 && place_meeting(x,y+1, Ground)){
-		Grounded = true;
-	}else{
-		Grounded = false;
+		setOnGround(true);
 	}
 	
 	y += ySpd;
