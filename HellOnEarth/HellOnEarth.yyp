@@ -36,10 +36,12 @@
   "name":"HellOnEarth",
   "resources":[
     {"id":{"name":"Ground","path":"objects/Ground/Ground.yy",},},
+    {"id":{"name":"LevelGenerator","path":"objects/LevelGenerator/LevelGenerator.yy",},},
     {"id":{"name":"Player","path":"objects/Player/Player.yy",},},
     {"id":{"name":"PlayerFollower","path":"objects/PlayerFollower/PlayerFollower.yy",},},
     {"id":{"name":"Room1","path":"rooms/Room1/Room1.yy",},},
     {"id":{"name":"GameInput","path":"scripts/GameInput/GameInput.yy",},},
+    {"id":{"name":"LevelGeneration","path":"scripts/LevelGeneration/LevelGeneration.yy",},},
     {"id":{"name":"Main","path":"scripts/Main/Main.yy",},},
     {"id":{"name":"Sprite1","path":"sprites/Sprite1/Sprite1.yy",},},
     {"id":{"name":"Sprite2","path":"sprites/Sprite2/Sprite2.yy",},},

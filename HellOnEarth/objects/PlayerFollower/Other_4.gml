@@ -14,3 +14,4 @@ _camY = clamp(_camY, 0, room_height - _camHeight);
 
 finalCamX = _camX;
 finalCamY = _camY;
+scrollSpeed = 2;

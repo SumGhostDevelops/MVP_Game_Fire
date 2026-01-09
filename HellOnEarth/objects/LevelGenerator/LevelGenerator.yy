@@ -1,12 +1,9 @@
 {
   "$GMObject":"",
-  "%Name":"Ground",
-  "eventList":[
-    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":3,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
-    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
-  ],
+  "%Name":"LevelGenerator",
+  "eventList":[],
   "managed":true,
-  "name":"Ground",
+  "name":"LevelGenerator",
   "overriddenProperties":[],
   "parent":{
     "name":"Objects",
@@ -29,11 +26,8 @@
   "properties":[],
   "resourceType":"GMObject",
   "resourceVersion":"2.0",
-  "solid":true,
-  "spriteId":{
-    "name":"tGround",
-    "path":"sprites/tGround/tGround.yy",
-  },
+  "solid":false,
+  "spriteId":null,
   "spriteMaskId":null,
   "visible":true,
 }
