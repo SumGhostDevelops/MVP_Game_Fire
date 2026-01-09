@@ -16,7 +16,7 @@ function Slide()
 
 function Dash()
 {	
-	if(keyboard_check_pressed(vk_shift))
+	if(keyboard_check_pressed(vk_shift) && (!Grounded || coyoteHangTimer > 0))
 	{	
 		dashing = true;
 		dashTimer = DASH_MAX_TIME;
@@ -37,9 +37,10 @@ function Dash()
 	if(!dashing)
 	{	//dashTimer = 0;
 	}
+	show_debug_message(dashTimer);
 	
 	if(dashing)
-	{	dashTimer -= (delta_time / 100000);
+	{	dashTimer -= (delta_time);
 	}
 	
 	show_debug_message(dashTimer);
@@ -72,7 +73,7 @@ function GameInputSetup()
 	jumpKeyBuffered = 0;
 	jumpKeyBufferedTimer = 0;
 	dashing = false;
-	DASH_MAX_TIME = (delta_time / 100000) * .5; // (deltatime thing) x seconds
+	DASH_MAX_TIME = (1_000_000) * .5; // (deltatime thing) x seconds
 	dashTimer = 0;
 }
 
