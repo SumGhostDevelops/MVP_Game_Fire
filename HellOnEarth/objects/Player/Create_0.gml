@@ -1,8 +1,14 @@
 /// @description Game Constants
 
-window_set_size(1270, 720);
+window_set_max_width(display_get_width());
+window_set_max_height(display_get_height());
+window_set_min_width(display_get_width() / 5);
+window_set_min_height(display_get_height() / 5);
+window_set_size(display_get_width() / 1.5, display_get_height() / 1.5);
+window_center();
+
 gpu_set_texfilter(false);
-controlsSetup();
+GameInputSetup();
 
 // Functions
 function setOnGround(_val = true){

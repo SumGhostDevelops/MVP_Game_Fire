@@ -16,7 +16,7 @@ _camY = clamp(_camY, 0, room_height - _camHeight);
 finalCamX += (_camX - finalCamX) * camTrailSpeed;
 finalCamY += (_camY - finalCamY) * camTrailSpeed;
 
-scrollSpeed+= logn(scrollSpeed, scrollSpeed);
+scrollSpeed += logn(scrollSpeed, scrollSpeed);
 
 show_debug_message(scrollSpeed);
 camera_set_view_pos(view_camera[0], scrollSpeed, finalCamY);
