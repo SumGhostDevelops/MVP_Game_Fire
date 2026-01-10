@@ -13,14 +13,15 @@ GameInputSetup();
 // Functions
 function setOnGround(_val = true){
 
-	if _val == true{
-	Grounded = true;
-	coyoteHangTimer = coyoteHangFrames;
-	
-	}else{
-	Grounded = false;
-	coyoteHangTimer = 0;
-	
+	if (_val)
+	{
+		Grounded = true;
+		coyoteHangTimer = coyoteHangFrames;
+	}
+	else
+	{
+		Grounded = false;
+		coyoteHangTimer = 0;
 	}
 }
 
