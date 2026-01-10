@@ -157,10 +157,15 @@ function Jump()
 
 function Handlers()
 {
+	SetAnimationState(PlayerAnimState.Idle);
+	
+	if(keyboard_check(vk_right) || keyboard_check(vk_left))
+	{	SetAnimationState(PlayerAnimState.Running);
+	}
+	
 	Dash();
 	Crouch();
 	Jump();
-	
 }
 
 function HandleAnimation()
@@ -176,7 +181,6 @@ function HandleAnimation()
 	var imageBlend = Player.image_blend;
 	var imageAlpha = Player.image_alpha;
 
-	
 	switch(animState)
 	{
 		default:
@@ -235,7 +239,6 @@ function HandleAnimation()
 	}
 	
 	draw_sprite_ext(sprite, imageIndex, x1, y1, imageXScale, imageYScale, imageAngle, imageBlend, imageAlpha);
-
 }
 
 function GameInputSetup()
@@ -243,7 +246,6 @@ function GameInputSetup()
 	bufferTime = 5;
 	jumpKeyBuffered = 0;
 	jumpKeyBufferedTimer = 0;
-	dashing = false;
 	DASH_MAX_TIME = (1_000_000) * .30; // (deltatime thing) x seconds
 	dashTimer = 0;
 	animState = PlayerAnimState.Idle;
@@ -270,7 +272,6 @@ function PlayerPhysics()
 
 	//X Pos
 	xSpd = moveDir * moveSpd * xMultiplier;
-	
 
 	// collision
 	var _subPixel = .5;
