@@ -1,77 +1,144 @@
 enum PlayerAnimState
 {
+	// ORDER MATTERS.
+	// LOWEST PRIORITY.
+	Empty,
 	Idle,
 	Running,
 	Jumping,
 	Crouching,
 	Sliding,
 	Dashing,
+	// HEIGHTS PRIORITY.
 }
 
 enum Compass
 {
+	NoDirection,
 	North,
+	NorthEast,
+	NorthWest,
 	South,
+	SouthEast,
+	SouthWest,
 	East,
 	West,
 }
 
+function IsAnimationDone(animationObject)
+{
+	return animationObject.image_index < animationObject.image_number - 1;
+}
+
+function ComputeCompassAngle(c) 
+{
+    switch(c) 
+    {
+        case Compass.North:       return 0;
+        case Compass.NorthEast:   return 45;
+        case Compass.East:        return 90;
+        case Compass.SouthEast:   return 135;
+        case Compass.South:       return 180;
+        case Compass.SouthWest:   return 225;
+        case Compass.West:        return 270;
+        case Compass.NorthWest:   return 315;
+        default:
+        case Compass.NoDirection: return 0;
+    }
+}
+
+
+function ComputeCompassIsCardinal(c)
+{
+	switch(c)
+	{
+		case Compass.North:
+		case Compass.East:
+		case Compass.South:
+		case Compass.West:
+			return true;
+		default: 
+			return false;
+	}
+}
+
+function SetAnimationState(state)
+{
+	// If the current state is not high priority enough skip it.
+	if(!IsAnimationDone(Player))
+	{
+		if(state < animState)
+		{	return;
+		}
+	}
+	
+	// Else just set it to the animation desired.
+	animState = state;
+}
 
 function Crouch()
 {
-	Slide();
-		
-	animState = PlayerAnimState.Crouching;
-	return;
-
+	var CrouchKeyBind = vk_control;
+	
+	if(!keyboard_check(CrouchKeyBind))
+	{	return;	
+	}
+	
+	// Crouch Ended
+	if(keyboard_check_released(CrouchKeyBind))
+	{	return;
+	}
+	
+	SetAnimationState(PlayerAnimState.Crouching);
 }
 
 function Slide()
 {
-	animState = PlayerAnimState.Sliding;
+	SetAnimationState(PlayerAnimState.Sliding);
 }
 
 function Dash()
 {	
-	if(keyboard_check_pressed(vk_shift) && (!Grounded || coyoteHangTimer > 0))
-	{	
-		dashing = true;
-		dashTimer = DASH_MAX_TIME;
+	var DashKeyBind = vk_shift
+	
+	if(!keyboard_check(vk_shift))
+	{	return;
+	}
+	// Dash Ended.
+	if(keyboard_check_released(DashKeyBind))
+	{	return;
 	}
 	
-	if(keyboard_check_released(vk_shift))
-	{	dashing = false;
-	}
-	
+	// Reset dash timer if we ground.
 	if(Grounded)
-	{	dashing = false;
-	}
-	
-	if(dashTimer <= 0)
-	{	dashing = false;
-	}
-	
-	if(!dashing)
-	{	//dashTimer = 0;
-	}
-	
-	if(dashing)
 	{	
-		dashTimer -= (delta_time);
-		animState = PlayerAnimState.Dashing;
+		dashTimer = DASH_MAX_TIME;
+		// Dash Cannot play if we are grounded.
+		return;
 	}
 	
-}
-
-function MouseInput()
-{
+	if(dashTimer > 0)
+	{	xMultiplier *= 1.5;
+	}
+	
+	dashTimer -= delta_time;
+	
+	SetAnimationState(PlayerAnimState.Dashing);
 }
 
 function Jump()
 {
-	animState = PlayerAnimState.Jumping;
+	var JumpKeyBind = vk_space;
 	
-	if(keyboard_check_pressed(vk_space))
+	if(!keyboard_check(JumpKeyBind))
+	{	return;
+	}
+	// Jump Ended.	
+	if(keyboard_check_released(JumpKeyBind))
+	{	return;
+	}
+	
+	if(keyboard_check_pressed(vk_space) || keyboard_check_pressed(vk_up))
 	{	jumpKeyBufferedTimer = bufferTime;
 	}
 	
@@ -85,62 +152,90 @@ function Jump()
 		jumpKeyBuffered = 0;
 	}
 	
+	SetAnimationState(PlayerAnimState.Jumping);
+}
+
+function Handlers()
+{
+	Dash();
+	Crouch();
+	Jump();
 	
 }
 
 function HandleAnimation()
 {
-	sprite = pointer_null;
-	imageIndex = Player.image_index;
-	x1 = Player.x;
-	y1 = Player.y;
-	imageXScale = Player.image_xscale * .05;
-	imageYScale = Player.image_yscale * .05;
-	imageAngle = Player.image_alpha;
-	imageBlend = Player.image_blend;
-	imageAlpha = Player.image_alpha;
-	
-	
-	switch(animDirection)
-	{
-		case Compass.North:
-			break;
-		case Compass.South:
-			break;
-		case Compass.East:
-			break;
-		case Compass.West:
-			break;
-	}
+	var angle = ComputeCompassAngle(animDirection);
+	var sprite = pointer_null;
+	var imageIndex = Player.image_index;
+	var x1 = Player.x;
+	var y1 = Player.y;
+	var imageXScale = Player.image_xscale * .05;
+	var imageYScale = Player.image_yscale * .05;
+	var imageAngle = Player.image_alpha;
+	var imageBlend = Player.image_blend;
+	var imageAlpha = Player.image_alpha;
+
 	
 	switch(animState)
 	{
 		default:
 		case PlayerAnimState.Idle:
+			sprite = Sprite4;
+			break;
 		case PlayerAnimState.Running:
-			if(animDirection == Compass.West)
+			sprite = SpritePlayerRun;
+			
+			if(animDirection == Compass.East)
 			{	imageXScale = -imageXScale;
 			}
-			sprite = SpritePlayerRun;
+			
 			break;
 		case PlayerAnimState.Crouching:
 			sprite = SpritePlayerRun;
+			
+			if(animDirection == Compass.East)
+			{	imageXScale = -imageXScale;
+			}
 			break;
 		case PlayerAnimState.Dashing:
 			sprite = SpritePlayerDash;
+			
+			// Is it in the East Side?
+			if(animDirection == Compass.East || animDirection == Compass.NorthEast || animDirection == Compass.SouthEast)
+			{	imageXScale = -imageXScale;
+			}
+			
+			// Since dash by default is already tilted x degrees then just adjust.
+			var BASE_DASH_ANGLE_OFFSET = 90
+			
+			imageAngle += angle - BASE_DASH_ANGLE_OFFSET;
+			
 			break;
 		case PlayerAnimState.Jumping:
 			sprite = SpritePlayerJump;
+			
+			if(animDirection == Compass.NorthEast)
+			{	imageAngle += angle;
+			}
+			else if(animDirection == Compass.NorthWest)
+			{
+				imageXScale = -imageXScale;
+				imageAngle += angle;
+			}
+			
 			break;
 		case PlayerAnimState.Sliding:
 			sprite = SpritePlayerRoll;
+			
+			if(animDirection == Compass.East)
+			{	imageXScale = -imageXScale;
+			}
 			break;
 	}
 	
-	show_debug_message(sprite);
-	show_debug_message(animDirection);
-	
 	draw_sprite_ext(sprite, imageIndex, x1, y1, imageXScale, imageYScale, imageAngle, imageBlend, imageAlpha);
+
 }
 
 function GameInputSetup()
@@ -152,68 +247,30 @@ function GameInputSetup()
 	DASH_MAX_TIME = (1_000_000) * .30; // (deltatime thing) x seconds
 	dashTimer = 0;
 	animState = PlayerAnimState.Idle;
-	animDirection = Compass.West;
+	animDirection = Compass.NoDirection;
+	xMultiplier = 1;
+	yMultiplier = 1;
 }
 
 function GameInput()
+{	
+	PlayerPhysics();
+	Handlers();
+}
+
+function PlayerPhysics()
 {
-	//Inputs
-	rightKey = keyboard_check(vk_right) || keyboard_check(ord("D"));
-	leftKey = keyboard_check(vk_left) || keyboard_check(ord("A"));
-	upKey = keyboard_check(vk_up) || keyboard_check(ord("W"))
-	downKey = keyboard_check(vk_down) || keyboard_check(ord("S"))
-	
-	animState = PlayerAnimState.Idle;
-	
-	if(keyboard_check(vk_space))
-	{	Jump();
-	}
-	
-	if(keyboard_check(vk_down))
-	{	Crouch();
-	}
-	
-	Dash();
-	
+	rightKey = keyboard_check(vk_right);
+	leftKey = keyboard_check(vk_left);
 	
 	//Direction 
 	moveDir = rightKey - leftKey;
-
-	if(moveDir)
-	{
-		if(leftKey)
-		{	animDirection = Compass.West;
-		}
-		else
-		{	animDirection = Compass.East;
-		}
-	}
-	else
-	{
-		if(upKey && downKey)
-		{
-		}
-		else if(upKey)
-		{	animDirection = Compass.North;
-		}
-		else if(downKey)
-		{	animDirection = Compass.South;
-		}
-		
-	}
 	
 	//Movement
 
 	//X Pos
-	xSpd = moveDir * moveSpd;
-
-	if(moveDir && animState == PlayerAnimState.Idle)
-	{	animState = PlayerAnimState.Running;
-	}
+	xSpd = moveDir * moveSpd * xMultiplier;
 	
-	if(dashing)
-	{	xSpd *= (4 * (dashTimer / DASH_MAX_TIME))
-	}
 
 	// collision
 	var _subPixel = .5;
@@ -239,13 +296,11 @@ function GameInput()
 	//Y Pos
 	// Gravity
 	if (coyoteHangTimer > 0)
-	{
-		coyoteHangTimer--;
+	{	coyoteHangTimer--;
 	}
 	else
 	{
-		ySpd += GRAV;
-		
+		ySpd += GRAV * yMultiplier;
 
 		setOnGround(false);
 	}
@@ -286,7 +341,7 @@ function GameInput()
 		jumpHoldTimer--;
 	}
 	
-	if(!keyboard_check(vk_space))
+	if(!keyboard_check(vk_space) && !keyboard_check(vk_up))
 	{	jumpHoldTimer = 0;
 	}
 	
@@ -311,8 +366,42 @@ function GameInput()
 	{	setOnGround(true);
 	}
 	
-	if(!dashing)
-	{	y += ySpd;
-	}
+	y += ySpd;
 	
+	if (xSpd > 0) 
+	{ 
+	    if (ySpd > 0)
+		{	animDirection = Compass.SouthEast;
+	    } 
+		else if (ySpd < 0) 
+		{	animDirection = Compass.NorthEast;
+	    } 
+		else 
+		{	animDirection = Compass.East;
+	    }
+	} 
+	else if (xSpd < 0) 
+	{
+	    if (ySpd > 0) 
+		{	animDirection = Compass.SouthWest;
+	    } 
+		else if (ySpd < 0) 
+		{	animDirection = Compass.NorthWest;
+	    } 
+		else 
+		{	animDirection = Compass.West;
+	    }
+	} 
+	else 
+	{
+	    if (ySpd > 0) 
+		{	animDirection = Compass.South;
+	    } 
+		else if (ySpd < 0) 
+		{	animDirection = Compass.North;
+	    } 
+		else 
+		{	animDirection = Compass.NoDirection; // idle
+	    }
+	}
 }
