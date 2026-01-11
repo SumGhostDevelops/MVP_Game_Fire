@@ -317,7 +317,7 @@ function PlayerPhysics()
 	{
 	    if (downKey)         animDirection = Compass.South;
 	    else if (upKey)      animDirection = Compass.North;
-	    else                 animDirection = Compass.NoDirection; // idle
+	    //else                 animDirection = Compass.NoDirection; // idle
 	}
 	
 	//Direction 
