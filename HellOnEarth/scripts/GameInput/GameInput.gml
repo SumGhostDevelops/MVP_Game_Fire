@@ -262,16 +262,35 @@ function HandleAnimation()
 			
 			var BASE_ANGLE_OFFSET = 90;
 			
-			// convert to regular angle
-			if(angle > 180)
-			{	angle -= 360;
+			// assume thing is facing down.
+			
+			switch(angle)
+			{
+				case 0:
+					angle = 180;
+					break;
+				case 45:
+					angle = 135;
+					break;
+				case 270:
+					angle = 90;
+					break;
+				case 135:
+					angle = 45;
+					break;
+				case 180:
+					angle = 0;
+					break;
+				case 315:
+					angle = 45;
+					break;
+				case 225:
+					angle = 135;
+					break;
 			}
 			
+			show_debug_message(angle);
 			angle -= BASE_ANGLE_OFFSET;
-		
-			if (imageXScale < 0) 
-			{	angle = -angle;
-			}
 		
 			imageAngle = angle;
 
@@ -318,10 +337,11 @@ function HandleAnimation()
 		Player.image_index  = 0;
 	}
 	
+	/*
 	show_debug_message(Player.sprite_index);
 	show_debug_message(Player.image_xscale);
 	show_debug_message(Player.image_yscale);
-	
+	*/
 	Player.image_xscale = imageXScale;
 	Player.image_yscale = imageYScale;
 	Player.image_angle = imageAngle;
