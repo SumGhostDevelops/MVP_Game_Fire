@@ -111,8 +111,7 @@ function Dash()
 	}
 	
 	if(!keyboard_check(vk_shift))
-	{	
-		return;
+	{	return;
 	}
 	
 	// Dash Ended.
@@ -176,7 +175,9 @@ function Jump()
 	}
 	
 	if(keyboard_check_pressed(vk_space) || keyboard_check_pressed(vk_up))
-	{	jumpKeyBufferedTimer = bufferTime;
+	{	
+		jumpKeyBufferedTimer = bufferTime;
+		SetAnimationState(PlayerAnimState.Jumping);
 	}
 	
 	if(jumpKeyBufferedTimer > 0)
@@ -188,8 +189,6 @@ function Jump()
 	{
 		jumpKeyBuffered = 0;
 	}
-	
-	SetAnimationState(PlayerAnimState.Jumping);
 }
 
 function Handlers()
@@ -204,66 +203,53 @@ function Handlers()
 	Crouch();
 	Jump();
 }
+
 function HandleAnimation()
 {
 	var angle = ComputeCompassAngle(animDirection);
 	var sprite = pointer_null;
 	
-	var imageXScale = Player.image_xscale
-	var imageYScale = Player.image_yscale;
+	var imageXScale = .035;
+	var imageYScale = .035;
 	var imageAngle  = Player.image_angle;
 	var imageBlend  = Player.image_blend;
 	var imageAlpha  = Player.image_alpha;
 
+	if(animDirection == Compass.West
+			|| animDirection == Compass.NorthWest
+			|| animDirection == Compass.SouthWest)
+	{	imageXScale = -imageXScale;
+	}
+	
 	switch(animState)
 	{
 		default:
 		case PlayerAnimState.Idle:
-			sprite = Sprite4;
+			sprite = SpritePlayerRoll;
 			break;
 
 		case PlayerAnimState.Running:
 			sprite = SpritePlayerRun;
-			if(animDirection == Compass.East)
-				imageXScale = -imageXScale;
+			
 			break;
 
 		case PlayerAnimState.Crouching:
 			sprite = SpritePlayerRun;
-			if(animDirection == Compass.East)
-				imageXScale = -imageXScale;
 			break;
 
 		case PlayerAnimState.Dashing:
 			sprite = SpritePlayerDash;
 
-			if(animDirection == Compass.East
-			|| animDirection == Compass.NorthEast
-			|| animDirection == Compass.SouthEast)
-				imageXScale = -imageXScale;
-
-			var BASE_DASH_ANGLE_OFFSET = 90;
-			imageAngle += angle - BASE_DASH_ANGLE_OFFSET;
 			break;
 
 		case PlayerAnimState.Jumping:
 			sprite = SpritePlayerJump;
 
-			if(animDirection == Compass.NorthWest)
-			{
-				imageXScale = -imageXScale;
-				imageAngle += angle;
-			}
-			else if(animDirection == Compass.NorthEast)
-			{
-				imageAngle += angle;
-			}
 			break;
 
 		case PlayerAnimState.Sliding:
 			sprite = SpritePlayerRoll;
-			if(animDirection == Compass.East)
-				imageXScale = -imageXScale;
+		
 			break;
 	}
 	
@@ -274,6 +260,10 @@ function HandleAnimation()
 		Player.sprite_index = sprite;
 		Player.image_index  = 0;
 	}
+	
+	show_debug_message(Player.sprite_index);
+	show_debug_message(Player.image_xscale);
+	show_debug_message(Player.image_yscale);
 	
 	Player.image_xscale = imageXScale;
 	Player.image_yscale = imageYScale;
@@ -299,7 +289,7 @@ function GameInput()
 {	
 	PlayerPhysics();
 	Handlers();
-	
+	HandleAnimation();
 	//show_debug_message("fps: " + string(1_000_000 / delta_time))
 }
 
