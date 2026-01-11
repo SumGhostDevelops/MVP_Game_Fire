@@ -118,14 +118,7 @@ function Dash()
 	{	
 		//show_debug_message("Grounded");
 		dashTimer = DASH_MAX_TIME;
-		
-		// Dash Cannot play if we are grounded.
-		if(AnimationStateOwner() == PlayerAnimState.Dashing)
-		{	
-			EndAnimationState();
-			SetAnimationState(PlayerAnimState.Sliding);
-		}
-		
+
 		return;
 	}
 	
@@ -133,10 +126,12 @@ function Dash()
 	{	return;
 	}
 	
+	
 	// Dash Ended.
 	if(keyboard_check_released(DashKeyBind))
 	{	
 		dashTimer = 0;
+		
 		return;
 	}
 	
@@ -177,11 +172,10 @@ function Dash()
 				xMultiplier *= _speed / 1.5;
 				break;
 		}
+		SetAnimationState(PlayerAnimState.Dashing);
 	}
 	
 	dashTimer -= delta_time;
-	
-	SetAnimationState(PlayerAnimState.Dashing);
 }
 
 function Jump()
@@ -230,6 +224,7 @@ function HandleAnimation()
 	
 	var imageXScale = .030;
 	var imageYScale = .030;
+	var imageSpeed = Player.image_speed;
 	var imageAngle  = Player.image_angle;
 	var imageBlend  = Player.image_blend;
 	var imageAlpha  = Player.image_alpha;
@@ -289,7 +284,7 @@ function HandleAnimation()
 					break;
 			}
 			
-			show_debug_message(angle);
+			//show_debug_message(angle);
 			angle -= BASE_ANGLE_OFFSET;
 		
 			imageAngle = angle;
@@ -342,6 +337,7 @@ function HandleAnimation()
 	show_debug_message(Player.image_xscale);
 	show_debug_message(Player.image_yscale);
 	*/
+	Player.image_speed = imageSpeed;
 	Player.image_xscale = imageXScale;
 	Player.image_yscale = imageYScale;
 	Player.image_angle = imageAngle;
@@ -354,7 +350,7 @@ function GameInputSetup()
 	bufferTime = 5;
 	jumpKeyBuffered = 0;
 	jumpKeyBufferedTimer = 0;
-	DASH_MAX_TIME = (1_000_000) * .25; // (deltatime thing) x seconds
+	DASH_MAX_TIME = (1_000_000) * .15; // (deltatime thing) x seconds
 	dashTimer = 0;
 	animState = PlayerAnimState.Idle;
 	animDirection = Compass.NoDirection;
