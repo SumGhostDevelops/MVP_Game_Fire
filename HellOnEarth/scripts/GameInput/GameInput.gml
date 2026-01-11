@@ -27,7 +27,7 @@ enum Compass
 
 function IsAnimationDone(animationObject)
 {
-	return animationObject.image_index < animationObject.image_number - 1;
+	return animationObject.image_index >= animationObject.image_number - 1;
 }
 
 function ComputeCompassAngle(c) 
@@ -101,24 +101,64 @@ function Dash()
 {	
 	var DashKeyBind = vk_shift
 	
-	if(!keyboard_check(vk_shift))
-	{	return;
-	}
-	// Dash Ended.
-	if(keyboard_check_released(DashKeyBind))
-	{	return;
-	}
-	
 	// Reset dash timer if we ground.
 	if(Grounded)
 	{	
+		//show_debug_message("Grounded");
 		dashTimer = DASH_MAX_TIME;
 		// Dash Cannot play if we are grounded.
 		return;
 	}
 	
+	if(!keyboard_check(vk_shift))
+	{	
+		return;
+	}
+	
+	// Dash Ended.
+	if(keyboard_check_released(DashKeyBind))
+	{	
+		dashTimer = 0;
+		return;
+	}
+	
 	if(dashTimer > 0)
-	{	xMultiplier *= 1.5;
+	{	
+		var angle = ComputeCompassAngle(animDirection);
+		var _speed = 5 * (dashTimer / DASH_MAX_TIME);
+	
+		
+		switch(angle)
+		{
+			case 0:
+				yMultiplier /= _speed;
+				break;
+			case 45:
+				yMultiplier /= _speed / 1.5;
+				xMultiplier *= _speed / 1.5;
+				break;
+			case 90:
+				xMultiplier *= _speed;
+				break;
+			case 135:
+				yMultiplier /= _speed / 1.5;
+				xMultiplier *= _speed / 1.5;
+				break;
+			case 180:
+				yMultiplier *= _speed;
+				break;
+			case 225:
+				yMultiplier /= _speed / 1.5;
+				xMultiplier *= _speed / 1.5;
+				break;
+			case 270:
+				xMultiplier *= _speed;
+				break;
+			case 315:
+				yMultiplier /= _speed / 1.5;
+				xMultiplier *= _speed / 1.5;
+				break;
+		}
 	}
 	
 	dashTimer -= delta_time;
@@ -130,9 +170,6 @@ function Jump()
 {
 	var JumpKeyBind = vk_space;
 	
-	if(!keyboard_check(JumpKeyBind))
-	{	return;
-	}
 	// Jump Ended.	
 	if(keyboard_check_released(JumpKeyBind))
 	{	return;
@@ -167,19 +204,16 @@ function Handlers()
 	Crouch();
 	Jump();
 }
-
 function HandleAnimation()
 {
 	var angle = ComputeCompassAngle(animDirection);
 	var sprite = pointer_null;
-	var imageIndex = Player.image_index;
-	var x1 = Player.x;
-	var y1 = Player.y;
-	var imageXScale = Player.image_xscale * .05;
-	var imageYScale = Player.image_yscale * .05;
-	var imageAngle = Player.image_alpha;
-	var imageBlend = Player.image_blend;
-	var imageAlpha = Player.image_alpha;
+	
+	var imageXScale = Player.image_xscale
+	var imageYScale = Player.image_yscale;
+	var imageAngle  = Player.image_angle;
+	var imageBlend  = Player.image_blend;
+	var imageAlpha  = Player.image_alpha;
 
 	switch(animState)
 	{
@@ -187,58 +221,65 @@ function HandleAnimation()
 		case PlayerAnimState.Idle:
 			sprite = Sprite4;
 			break;
+
 		case PlayerAnimState.Running:
 			sprite = SpritePlayerRun;
-			
 			if(animDirection == Compass.East)
-			{	imageXScale = -imageXScale;
-			}
-			
+				imageXScale = -imageXScale;
 			break;
+
 		case PlayerAnimState.Crouching:
 			sprite = SpritePlayerRun;
-			
 			if(animDirection == Compass.East)
-			{	imageXScale = -imageXScale;
-			}
+				imageXScale = -imageXScale;
 			break;
+
 		case PlayerAnimState.Dashing:
 			sprite = SpritePlayerDash;
-			
-			// Is it in the East Side?
-			if(animDirection == Compass.East || animDirection == Compass.NorthEast || animDirection == Compass.SouthEast)
-			{	imageXScale = -imageXScale;
-			}
-			
-			// Since dash by default is already tilted x degrees then just adjust.
-			var BASE_DASH_ANGLE_OFFSET = 90
-			
+
+			if(animDirection == Compass.East
+			|| animDirection == Compass.NorthEast
+			|| animDirection == Compass.SouthEast)
+				imageXScale = -imageXScale;
+
+			var BASE_DASH_ANGLE_OFFSET = 90;
 			imageAngle += angle - BASE_DASH_ANGLE_OFFSET;
-			
 			break;
+
 		case PlayerAnimState.Jumping:
 			sprite = SpritePlayerJump;
-			
-			if(animDirection == Compass.NorthEast)
-			{	imageAngle += angle;
-			}
-			else if(animDirection == Compass.NorthWest)
+
+			if(animDirection == Compass.NorthWest)
 			{
 				imageXScale = -imageXScale;
 				imageAngle += angle;
 			}
-			
+			else if(animDirection == Compass.NorthEast)
+			{
+				imageAngle += angle;
+			}
 			break;
+
 		case PlayerAnimState.Sliding:
 			sprite = SpritePlayerRoll;
-			
 			if(animDirection == Compass.East)
-			{	imageXScale = -imageXScale;
-			}
+				imageXScale = -imageXScale;
 			break;
 	}
 	
-	draw_sprite_ext(sprite, imageIndex, x1, y1, imageXScale, imageYScale, imageAngle, imageBlend, imageAlpha);
+	// ONLY change sprite + reset index
+	if (Player.sprite_index != sprite)
+	{
+		Player.visible = true;
+		Player.sprite_index = sprite;
+		Player.image_index  = 0;
+	}
+	
+	Player.image_xscale = imageXScale;
+	Player.image_yscale = imageYScale;
+	Player.image_angle = imageAngle;
+	Player.image_blend = imageBlend;
+	Player.image_alpha = imageAlpha;
 }
 
 function GameInputSetup()
@@ -246,7 +287,7 @@ function GameInputSetup()
 	bufferTime = 5;
 	jumpKeyBuffered = 0;
 	jumpKeyBufferedTimer = 0;
-	DASH_MAX_TIME = (1_000_000) * .30; // (deltatime thing) x seconds
+	DASH_MAX_TIME = (1_000_000) * .75; // (deltatime thing) x seconds
 	dashTimer = 0;
 	animState = PlayerAnimState.Idle;
 	animDirection = Compass.NoDirection;
@@ -258,12 +299,36 @@ function GameInput()
 {	
 	PlayerPhysics();
 	Handlers();
+	
+	//show_debug_message("fps: " + string(1_000_000 / delta_time))
 }
 
 function PlayerPhysics()
 {
-	rightKey = keyboard_check(vk_right);
-	leftKey = keyboard_check(vk_left);
+	rightKey = keyboard_check(vk_right) || keyboard_check(ord("D"));
+	leftKey = keyboard_check(vk_left) || keyboard_check(ord("A"));
+	upKey = keyboard_check(vk_space) || keyboard_check(ord("W"));
+	downKey = keyboard_check(vk_down) || keyboard_check(ord("S"));
+	
+	// determine animDirection
+	if (rightKey)
+	{
+	    if (downKey)         animDirection = Compass.SouthEast;
+	    else if (upKey)      animDirection = Compass.NorthEast;
+	    else                 animDirection = Compass.East;
+	}
+	else if (leftKey)
+	{
+	    if (downKey)         animDirection = Compass.SouthWest;
+	    else if (upKey)      animDirection = Compass.NorthWest;
+	    else                 animDirection = Compass.West;
+	}
+	else
+	{
+	    if (downKey)         animDirection = Compass.South;
+	    else if (upKey)      animDirection = Compass.North;
+	    else                 animDirection = Compass.NoDirection; // idle
+	}
 	
 	//Direction 
 	moveDir = rightKey - leftKey;
@@ -369,40 +434,7 @@ function PlayerPhysics()
 	
 	y += ySpd;
 	
-	if (xSpd > 0) 
-	{ 
-	    if (ySpd > 0)
-		{	animDirection = Compass.SouthEast;
-	    } 
-		else if (ySpd < 0) 
-		{	animDirection = Compass.NorthEast;
-	    } 
-		else 
-		{	animDirection = Compass.East;
-	    }
-	} 
-	else if (xSpd < 0) 
-	{
-	    if (ySpd > 0) 
-		{	animDirection = Compass.SouthWest;
-	    } 
-		else if (ySpd < 0) 
-		{	animDirection = Compass.NorthWest;
-	    } 
-		else 
-		{	animDirection = Compass.West;
-	    }
-	} 
-	else 
-	{
-	    if (ySpd > 0) 
-		{	animDirection = Compass.South;
-	    } 
-		else if (ySpd < 0) 
-		{	animDirection = Compass.North;
-	    } 
-		else 
-		{	animDirection = Compass.NoDirection; // idle
-	    }
-	}
+	xMultiplier = 1;
+	yMultiplier = 1;
 }
+

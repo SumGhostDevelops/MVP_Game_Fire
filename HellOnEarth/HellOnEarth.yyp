@@ -38,7 +38,6 @@
     {"id":{"name":"Ground","path":"objects/Ground/Ground.yy",},},
     {"id":{"name":"LevelGenerator","path":"objects/LevelGenerator/LevelGenerator.yy",},},
     {"id":{"name":"Player","path":"objects/Player/Player.yy",},},
-    {"id":{"name":"PlayerFollower","path":"objects/PlayerFollower/PlayerFollower.yy",},},
     {"id":{"name":"Room1","path":"rooms/Room1/Room1.yy",},},
     {"id":{"name":"GameInput","path":"scripts/GameInput/GameInput.yy",},},
     {"id":{"name":"Keybinds","path":"scripts/Keybinds/Keybinds.yy",},},
