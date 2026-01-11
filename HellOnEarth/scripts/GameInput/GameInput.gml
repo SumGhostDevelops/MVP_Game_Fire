@@ -143,16 +143,16 @@ function Dash()
 	if(dashTimer > 0)
 	{	
 		var angle = ComputeCompassAngle(animDirection);
-		var _speed = 5 * (dashTimer / DASH_MAX_TIME);
+		var _speed = 10 * (dashTimer / DASH_MAX_TIME);
 	
 		
 		switch(angle)
 		{
 			case 0:
-				yMultiplier /= _speed;
+				yMultiplier /= -.5 * _speed;
 				break;
 			case 45:
-				yMultiplier /= _speed / 1.5;
+				yMultiplier /= _speed * -.75;
 				xMultiplier *= _speed / 1.5;
 				break;
 			case 90:
@@ -173,7 +173,7 @@ function Dash()
 				xMultiplier *= _speed;
 				break;
 			case 315:
-				yMultiplier /= _speed / 1.5;
+				yMultiplier /= _speed * -.75;
 				xMultiplier *= _speed / 1.5;
 				break;
 		}
@@ -406,7 +406,7 @@ function PlayerPhysics()
 	xSpd = moveDir * moveSpd * xMultiplier;
 
 	// collision
-	var _subPixel = .5;
+	var _subPixel = .1;
 
 	if(place_meeting(x + xSpd, y, Ground))
 	{
