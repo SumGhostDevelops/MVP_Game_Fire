@@ -76,6 +76,15 @@ function SetAnimationState(state)
 	animState = state;
 }
 
+function AnimationStateOwner()
+{	return animState;
+}
+
+function EndAnimationState()
+{	
+	animState = PlayerAnimState.Empty;
+}
+
 function Crouch()
 {
 	var CrouchKeyBind = vk_control;
@@ -88,6 +97,9 @@ function Crouch()
 	if(keyboard_check_released(CrouchKeyBind))
 	{	return;
 	}
+	
+	xMultiplier *= .5;
+	yMultiplier *= 2;
 	
 	SetAnimationState(PlayerAnimState.Crouching);
 }
@@ -106,7 +118,14 @@ function Dash()
 	{	
 		//show_debug_message("Grounded");
 		dashTimer = DASH_MAX_TIME;
+		
 		// Dash Cannot play if we are grounded.
+		if(AnimationStateOwner() == PlayerAnimState.Dashing)
+		{	
+			EndAnimationState();
+			SetAnimationState(PlayerAnimState.Sliding);
+		}
+		
 		return;
 	}
 	
@@ -140,14 +159,14 @@ function Dash()
 				xMultiplier *= _speed;
 				break;
 			case 135:
-				yMultiplier /= _speed / 1.5;
+				yMultiplier *= _speed / 1.5;
 				xMultiplier *= _speed / 1.5;
 				break;
 			case 180:
 				yMultiplier *= _speed;
 				break;
 			case 225:
-				yMultiplier /= _speed / 1.5;
+				yMultiplier *= _speed / 1.5;
 				xMultiplier *= _speed / 1.5;
 				break;
 			case 270:
@@ -209,8 +228,8 @@ function HandleAnimation()
 	var angle = ComputeCompassAngle(animDirection);
 	var sprite = pointer_null;
 	
-	var imageXScale = .035;
-	var imageYScale = .035;
+	var imageXScale = .030;
+	var imageYScale = .030;
 	var imageAngle  = Player.image_angle;
 	var imageBlend  = Player.image_blend;
 	var imageAlpha  = Player.image_alpha;
@@ -224,6 +243,7 @@ function HandleAnimation()
 	switch(animState)
 	{
 		default:
+		case PlayerAnimState.Empty:
 		case PlayerAnimState.Idle:
 			sprite = SpritePlayerRoll;
 			break;
@@ -239,11 +259,48 @@ function HandleAnimation()
 
 		case PlayerAnimState.Dashing:
 			sprite = SpritePlayerDash;
+			
+			var BASE_ANGLE_OFFSET = 90;
+			
+			// convert to regular angle
+			if(angle > 180)
+			{	angle -= 360;
+			}
+			
+			angle -= BASE_ANGLE_OFFSET;
+		
+			if (imageXScale < 0) 
+			{	angle = -angle;
+			}
+		
+			imageAngle = angle;
 
 			break;
 
 		case PlayerAnimState.Jumping:
 			sprite = SpritePlayerJump;
+			// convert to regular angle
+			if(angle > 180)
+			{	angle -= 360;
+			}
+			
+			if (angle > 90)
+			{	angle = 180 - angle;
+			}
+			else if (angle < -90)
+			{	angle = -180 - angle;
+			}	
+			
+			angle = clamp(angle, -45, 45);
+
+			if (imageXScale < 0) 
+			{	angle = -angle;
+			}
+			
+			// clamp to nice angles
+			angle = clamp(angle, -10, 10);
+			
+			imageAngle = angle;
 
 			break;
 
@@ -277,7 +334,7 @@ function GameInputSetup()
 	bufferTime = 5;
 	jumpKeyBuffered = 0;
 	jumpKeyBufferedTimer = 0;
-	DASH_MAX_TIME = (1_000_000) * .75; // (deltatime thing) x seconds
+	DASH_MAX_TIME = (1_000_000) * .25; // (deltatime thing) x seconds
 	dashTimer = 0;
 	animState = PlayerAnimState.Idle;
 	animDirection = Compass.NoDirection;
