@@ -102,6 +102,9 @@ function Crouch()
 			xMultiplier *= 0.9;
 		}
     }
+	else if(AnimationStateOwner() == PlayerAnimState.Crouching || AnimationStateOwner() == PlayerAnimState.Sliding)
+	{	EndAnimationState();
+	}
 }
 
 function Slide()
@@ -273,9 +276,17 @@ function HandleAnimation()
 	
 			sprite = SpritePlayerCrouch;
 
-			if(Player.image_index > 19){
-			Player.image_index = 6;
+			if(image_index > 19 && image_index > 6)
+			{	Player.image_index = 6;
 			}
+			
+			if(current_sound != SoundCrouch)
+			{	
+				current_sound = SoundCrouch;
+				audio_play_sound(SoundCrouch, 0, false);
+			}
+
+			
 			break;
 
 		case PlayerAnimState.Dashing:
@@ -318,7 +329,7 @@ function HandleAnimation()
 			if(current_sound != SoundDash)
 			{	
 				current_sound = SoundDash;
-				audio_play_sound(SoundDash, 0, false);
+				audio_play_sound(SoundDash, 0, false, 15);
 			}
 
 			break;
@@ -347,6 +358,12 @@ function HandleAnimation()
 			angle = clamp(angle, -10, 10);
 			
 			imageAngle = angle;
+				
+			if(current_sound != SoundJump)
+			{	
+				current_sound = SoundJump;
+				audio_play_sound(SoundJump, 0, false);
+			}
 
 			break;
 
@@ -354,9 +371,17 @@ function HandleAnimation()
 			sprite = SpritePlayerRoll;
 			
 			
-			if(image_index > 40){
-			image_index = 9;
+			if(image_index > 40 && image_index > 9)
+			{
+				image_index = 9;
 			}
+			
+			if(current_sound != SoundRoll)
+			{	
+				current_sound = SoundRoll;
+				audio_play_sound(SoundRoll, 0, true);
+			}
+
 		
 			break;
 	}

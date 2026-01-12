@@ -5,12 +5,12 @@
     "name":"audiogroup_default",
     "path":"audiogroups/audiogroup_default",
   },
-  "bitDepth":1,
+  "bitDepth":0,
   "channelFormat":0,
   "compression":0,
   "compressionQuality":4,
   "conversionMode":0,
-  "duration":0.37151927,
+  "duration":0.37155297,
   "exportDir":"",
   "name":"SoundJump",
   "parent":{
@@ -20,7 +20,7 @@
   "preload":false,
   "resourceType":"GMSound",
   "resourceVersion":"2.0",
-  "sampleRate":44100,
+  "sampleRate":5512,
   "soundFile":"SoundJump.mp3",
   "volume":1.0,
 }
