@@ -216,10 +216,20 @@ function Handlers()
 {
 	SetAnimationState(PlayerAnimState.Idle);
 	Dash();
+	Death();
 	Crouch();
 	Jump();
 }
 
+function Death(){
+	if (Health < 1){
+		
+		instance_destroy(Player);
+	
+	}
+
+
+}
 function HandleAnimation()
 {
 	var angle = ComputeCompassAngle(animDirection);
@@ -227,10 +237,10 @@ function HandleAnimation()
 	
 	var imageXScale = 0.04286;
 	var imageYScale = 0.04286;
-	var imageSpeed = Player.image_speed;
-	var imageAngle  = Player.image_angle;
-	var imageBlend  = Player.image_blend;
-	var imageAlpha  = Player.image_alpha;
+	var imageSpeed =  image_speed;
+	var imageAngle  = image_angle;
+	var imageBlend  = image_blend;
+	var imageAlpha  = image_alpha;
 	var prevSound = current_sound;
 
 	if(animDirection == Compass.West
@@ -273,8 +283,8 @@ function HandleAnimation()
 	
 			sprite = SpritePlayerCrouch;
 
-			if(Player.image_index > 19){
-			Player.image_index = 6;
+			if(image_index > 19){
+			image_index = 6;
 			}
 			break;
 
@@ -368,7 +378,7 @@ function HandleAnimation()
 		}
 	}
 	
-	Player.sprite_index = sprite;
+	sprite_index = sprite;
 	//Player.image_index  = 0;
 	
 	/*
@@ -381,12 +391,12 @@ function HandleAnimation()
 	show_debug_message(Player.image_yscale);
 	*/
 	
-	Player.image_speed = imageSpeed;
-	Player.image_xscale = imageXScale;
-	Player.image_yscale = imageYScale;
-	Player.image_angle = imageAngle;
-	Player.image_blend = imageBlend;
-	Player.image_alpha = imageAlpha;
+	image_speed = imageSpeed;
+	image_xscale = imageXScale;
+	image_yscale = imageYScale;
+	image_angle = imageAngle;
+	image_blend = imageBlend;
+	image_alpha = imageAlpha;
 
 }
 

@@ -1,11 +1,11 @@
 GameInput()
 
-show_debug_message("sprite=" + string(Player.sprite_index)
-    + " w=" + string(sprite_get_width(Player.sprite_index))
-    + " h=" + string(sprite_get_height(Player.sprite_index))
-    + " xs=" + string(Player.image_xscale)
-    + " ys=" + string(Player.image_yscale)
-	+ " angle " + string(Player.image_angle)
-	+ " index "  + string(Player.image_index)
+show_debug_message("sprite=" + string(sprite_index)
+    + " w=" + string(sprite_get_width(sprite_index))
+    + " h=" + string(sprite_get_height(sprite_index))
+    + " xs=" + string(image_xscale)
+    + " ys=" + string(image_yscale)
+	+ " angle " + string(image_angle)
+	+ " index "  + string(image_index)
 	+ " health "  + string(Health));
 	
