@@ -40,6 +40,7 @@
   "resources":[
     {"id":{"name":"Game_UI","path":"fonts/Game_UI/Game_UI.yy",},},
     {"id":{"name":"Clouds","path":"objects/Clouds/Clouds.yy",},},
+    {"id":{"name":"death_Controller","path":"objects/death_Controller/death_Controller.yy",},},
     {"id":{"name":"DeathRain","path":"objects/DeathRain/DeathRain.yy",},},
     {"id":{"name":"Ground","path":"objects/Ground/Ground.yy",},},
     {"id":{"name":"LevelGenerator","path":"objects/LevelGenerator/LevelGenerator.yy",},},
