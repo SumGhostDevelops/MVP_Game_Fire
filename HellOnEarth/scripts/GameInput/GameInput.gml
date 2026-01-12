@@ -103,8 +103,19 @@ function Crouch()
 		}
     }
 	else if(AnimationStateOwner() == PlayerAnimState.Crouching || AnimationStateOwner() == PlayerAnimState.Sliding)
-	{	EndAnimationState();
+	{	
+		if (!CeilingBlocked()){
+		EndAnimationState();
+		}
+
+		
 	}
+}
+
+function CeilingBlocked()
+{
+
+    return place_meeting(x, y - 15, Ground);
 }
 
 function Slide()
@@ -114,79 +125,78 @@ function Slide()
 
 function Dash()
 {	
-	var DashKeyBind = vk_shift;
-	
-	// Reset dash timer if we ground.
-	if(Grounded)
-	{	
-		dashTimer = DASH_MAX_TIME;
-		dashCount = 0;
-	}
-
-	show_debug_message(dashCount);
-	// Dash Ended.
-	if(keyboard_check_released(DashKeyBind))
-	{		
-		if(AnimationStateOwner() == PlayerAnimState.Dashing)
-		{	EndAnimationState();
-		}
-				
-		if(dashCount < dashMaxCount && dashTimer <= 0)
-		{
-			dashTimer = DASH_MAX_TIME;
-			dashCount++;
-		}
-		
-		return;
-	}
-	
-	
-	if(!keyboard_check(vk_shift))
-	{	return;
-	}
-	
-	
-	if(dashTimer > 0)
-	{	
-		var angle = ComputeCompassAngle(animDirection);
-		var _speed = 10 * (dashTimer / DASH_MAX_TIME);
-	
-		
-		switch(angle)
-		{
-		    case 0: // North
-		        yMultiplier *= -_speed/3;
-		        break;
-		    case 45: // NorthEast
-		        yMultiplier *= -(_speed/3) * 0.707; // diagonal component
-		        xMultiplier *= (_speed/3) * 0.707;
-		        break;
-		    case 90: // East
-		        xMultiplier *= _speed;
-		        break;
-		    case 135: // SouthEast
-		        yMultiplier *= _speed * 0.707;
-		        xMultiplier *= (_speed/3) * 0.707;
-		        break;
-		    case 180: // South
-		        yMultiplier *= _speed*2;
-		        break;
-		    case 225: // SouthWest
-		        yMultiplier *= (_speed/3) * 0.707;
-		        xMultiplier *= -(_speed/3) * 0.707; // negative for left
-		        break;
-		    case 270: // West
-		        xMultiplier *= _speed;
-		        break;
-		    case 315: // NorthWest
-		        yMultiplier *= -(_speed/3) * 0.707;
-		        xMultiplier *= -(_speed/3) * 0.707; // negative for left
-		        break;
-		}
-		SetAnimationState(PlayerAnimState.Dashing);
-	}
-	
-	dashTimer -= delta_time;
+    var DashKeyBind = vk_shift;
+    
+    // Reset dash availability when grounded
+    if(Grounded)
+    {	
+        dashCount = 0;
+    }
+    
+    // Start dash on press
+    if(keyboard_check_pressed(DashKeyBind))
+    {
+        if(dashCount < dashMaxCount)
+        {
+            dashTimer = DASH_MAX_TIME;
+            dashCount++;
+        }
+    }
+    
+    // Dash Ended - stop early if released
+    if(keyboard_check_released(DashKeyBind))
+    {		
+        dashTimer = 0;
+        
+        if(AnimationStateOwner() == PlayerAnimState.Dashing)
+        {	
+            EndAnimationState();
+        }
+        
+        return;
+    }
+    
+    // Execute dash movement while timer is active
+    if(dashTimer > 0)
+    {	
+        var angle = ComputeCompassAngle(animDirection);
+        var _speed = 10 * (dashTimer / DASH_MAX_TIME);
+        
+        switch(angle)
+        {
+            case 0: // North
+                yMultiplier *= -_speed/3;
+                break;
+            case 45: // NorthEast
+                yMultiplier *= -(_speed/3) * 0.707;
+                xMultiplier *= (_speed/3) * 0.707;
+                break;
+            case 90: // East
+                xMultiplier *= _speed;
+                break;
+            case 135: // SouthEast
+                yMultiplier *= _speed * 0.707;
+                xMultiplier *= (_speed/3) * 0.707;
+                break;
+            case 180: // South
+                yMultiplier *= _speed*2;
+                break;
+            case 225: // SouthWest
+                yMultiplier *= (_speed/3) * 0.707;
+                xMultiplier *= (_speed/3) * 0.707;
+                break;
+            case 270: // West
+                xMultiplier *= _speed;
+                break;
+            case 315: // NorthWest
+                yMultiplier *= -(_speed/3) * 0.707;
+                xMultiplier *= (_speed/3) * 0.707;
+                break;
+        }
+        
+        SetAnimationState(PlayerAnimState.Dashing);
+        dashTimer -= delta_time;
+    }
 }
 
 function Jump()
@@ -226,18 +236,32 @@ function Handlers()
 
 function PlayerHealth(){
 	
-	if(timer_step % 10000 == 0 && Health < 100){
+	if(floor(ticks / 1_000_000) % 15 == 0 && Health < 50){
 	
 	Health++;
-	
+
 	}
 	
+	UILayer = layer_get_flexpanel_node("UILayer");
+	textPanel = flexpanel_node_get_child(UILayer, "textPanel");
+	textStruct = flexpanel_node_get_struct(textPanel);
+	textId = textStruct.layerElements[0].elementId;
+	layer_text_text(textId, Health);
 	
+	if (!Dead)
+{
+    ticks += delta_time;
+}
 	if (Health < 1){
 		audio_pause_all();
+		global.final_ticks = ticks; // store final time once
 		instance_destroy(Player);
+		Dead = true;
 	}
-
+if(Dead){
+	
+room_goto(Death);
+}
 
 }
 function HandleAnimation()
@@ -434,6 +458,7 @@ function HandleAnimation()
 
 function GameInputSetup()
 {
+
 	bufferTime = 5;
 	jumpKeyBuffered = 0;
 	jumpKeyBufferedTimer = 0;
@@ -446,6 +471,7 @@ function GameInputSetup()
 	xMultiplier = 1;
 	yMultiplier = 1;
 	current_sound = pointer_null;
+	Dead = false;
 	audio_play_sound(SoundDungeon, 0, true);
 }
 

@@ -1,0 +1,24 @@
+{
+  "$GMRoomUI":"",
+  "%Name":"RoomUI",
+  "children":[
+    {"$GMRUILayer":"v1","%Name":"UILayer","alignItems":2,"children":[
+        {"$GMRFlexPanel":"","%Name":"FlexPanel","alignItems":2,"children":[
+            {"$GMRFlexPanel":"","%Name":"textPanel","alignItems":2,"children":[
+                {"$GMRTextItem":"v3","%Name":"text_55A5CC00","alignment":0,"charSpacing":0.0,"colour":4294967295,"flexProperties":{"$InstanceFlexProps":"v1","anchor":0,"resourceType":"InstanceFlexProps",},"fontId":{"name":"Game_UI","path":"fonts/Game_UI/Game_UI.yy",},"frameH":0.0,"frameW":0.0,"frozen":false,"ignore":false,"inheritedItemId":null,"inheritItemSettings":false,"lineSpacing":0.0,"name":"text_55A5CC00","paragraphSpacing":0.0,"resourceType":"GMRTextItem","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"text":"100","wrap":false,"x":0.0,"y":0.0,},
+              ],"flexDirection":0,"height":{"unit":3,"value":19.0,},"justifyContent":1,"name":"textPanel","nodeColour":4282970846,"resourceType":"GMRFlexPanel","resourceVersion":"2.0","width":{"unit":3,"value":110.0,},},
+            {"$GMRSpriteGraphic":"v1","%Name":"graphic_391F6F22","animationSpeed":1.0,"colour":4294967295,"flexProperties":{"$InstanceFlexProps":"v1","anchor":0,"resourceType":"InstanceFlexProps","stretchHeight":true,"stretchWidth":true,},"frozen":false,"headPosition":0.0,"ignore":false,"inheritedItemId":null,"inheritItemSettings":false,"name":"graphic_391F6F22","resourceType":"GMRSpriteGraphic","resourceVersion":"2.0","rotation":0.0,"scaleX":1.5,"scaleY":1.5,"spriteId":{"name":"Sprite11","path":"sprites/Sprite11/Sprite11.yy",},"x":0.0,"y":0.0,},
+          ],"flexDirection":0,"height":{"unit":1,"value":103.0,},"justifyContent":1,"marginBottom":{"unit":1,"value":652.0,},"marginRight":{"unit":1,"value":1263.0,},"name":"FlexPanel","nodeColour":4294094152,"positionType":0,"resourceType":"GMRFlexPanel","resourceVersion":"2.0","width":{"unit":1,"value":98.0,},},
+      ],"flexDirection":0,"gridX":32,"gridY":32,"justifyContent":1,"name":"UILayer","nodeColour":4294068344,"resourceType":"GMRUILayer","resourceVersion":"2.0",},
+  ],
+  "locked":false,
+  "name":"RoomUI",
+  "parent":{
+    "name":"HellOnEarth",
+    "path":"HellOnEarth.yyp",
+  },
+  "resourceType":"GMRoomUI",
+  "resourceVersion":"2.0",
+  "viewspaceChildren":[],
+  "visible":true,
+}

@@ -1,3 +1,5 @@
+
+
 function rainHurt(){
 // Step Event
 
@@ -10,13 +12,21 @@ if (y > room_height || place_meeting(x, y, Ground)) {
 }
 
 
-
+ 
 // Collision with player
 if (place_meeting(x, y, Player)) {
     // Damage player
     with(Player) {
-        Health -= 1;
+		
+
+		audio_play_sound(SoundLava,1,false);
+		
+		
+		 Health -= 1;
+		   
     }
     instance_destroy();
+	}
+
 }
-}
+

@@ -2,7 +2,7 @@ if( instance_exists(Player)){
 if (Player.x > current_chunk_x * chunk_width - chunk_width ) {
     generate_chunk(current_chunk_x);
     current_chunk_x++;
-    
+    show_debug_message("generated!");
     // Delete old chunks
     if (ds_list_size(chunks) > 4) {
 		
