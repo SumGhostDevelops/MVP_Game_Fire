@@ -6,5 +6,6 @@ show_debug_message("sprite=" + string(Player.sprite_index)
     + " xs=" + string(Player.image_xscale)
     + " ys=" + string(Player.image_yscale)
 	+ " angle " + string(Player.image_angle)
-	+ " index "  + string(Player.image_index));
+	+ " index "  + string(Player.image_index)
+	+ " health "  + string(Health));
 	

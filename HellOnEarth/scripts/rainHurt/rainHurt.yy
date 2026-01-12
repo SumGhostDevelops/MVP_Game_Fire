@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"rainHurt",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"rainHurt",
+  "parent":{
+    "name":"Scripts",
+    "path":"folders/Scripts.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

@@ -26,7 +26,9 @@
     {"$GMFolder":"","%Name":"Tile Sets","folderPath":"folders/Tile Sets.yy","name":"Tile Sets","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Timelines","folderPath":"folders/Timelines.yy","name":"Timelines","resourceType":"GMFolder","resourceVersion":"2.0",},
   ],
-  "ForcedPrefabProjectReferences":[],
+  "ForcedPrefabProjectReferences":[
+    {"link":"io.gamemaker.gm_effect_blend-1.0.0","name":"io.gamemaker.gm_effect_blend-1.0.0","path":"io.gamemaker.gm_effect_blend-1.0.0.yyp",},
+  ],
   "IncludedFiles":[],
   "isEcma":false,
   "LibraryEmitters":[],
@@ -46,6 +48,7 @@
     {"id":{"name":"Keybinds","path":"scripts/Keybinds/Keybinds.yy",},},
     {"id":{"name":"LevelGeneration","path":"scripts/LevelGeneration/LevelGeneration.yy",},},
     {"id":{"name":"PlayerSettings","path":"scripts/PlayerSettings/PlayerSettings.yy",},},
+    {"id":{"name":"rainHurt","path":"scripts/rainHurt/rainHurt.yy",},},
     {"id":{"name":"SoundDash","path":"sounds/SoundDash/SoundDash.yy",},},
     {"id":{"name":"SoundDungeon","path":"sounds/SoundDungeon/SoundDungeon.yy",},},
     {"id":{"name":"SoundIdle","path":"sounds/SoundIdle/SoundIdle.yy",},},

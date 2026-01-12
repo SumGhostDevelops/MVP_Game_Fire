@@ -53,3 +53,4 @@ coyoteHangTimer = 0;
 // buffer
 coyoteJumpFrames = 5;
 coyoteJumpTimer = 0;
+
