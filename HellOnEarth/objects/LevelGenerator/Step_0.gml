@@ -1,5 +1,5 @@
-
-if (Player.x > current_chunk_x * chunk_width - chunk_width) {
+if( instance_exists(Player)){
+if (Player.x > current_chunk_x * chunk_width - chunk_width ) {
     generate_chunk(current_chunk_x);
     current_chunk_x++;
     
@@ -9,5 +9,6 @@ if (Player.x > current_chunk_x * chunk_width - chunk_width) {
         cleanup_chunk(chunks[| 0]);
 		
         ds_list_delete(chunks, 0);
-    }
+		}
+	}
 }
