@@ -87,21 +87,14 @@ function EndAnimationState()
 
 function Crouch()
 {
-	var CrouchKeyBind = vk_control;
-	
-	if(!keyboard_check(CrouchKeyBind))
-	{	return;	
-	}
-	
-	// Crouch Ended
-	if(keyboard_check_released(CrouchKeyBind))
-	{	return;
-	}
-	
-	xMultiplier *= .5;
-	yMultiplier *= 2;
-	
-	SetAnimationState(PlayerAnimState.Crouching);
+    var key = vk_control;
+
+    if (keyboard_check(key))
+    {
+        SetAnimationState(PlayerAnimState.Crouching);
+        xMultiplier *= 0.3;
+    }
+   
 }
 
 function Slide()
@@ -218,16 +211,15 @@ function Handlers()
 function HandleAnimation()
 {
 	var angle = ComputeCompassAngle(animDirection);
-	var sprite = PlayerAnimState.Idle;
+	var sprite = pointer_null;
 	
-	var imageXScale = .02;
-	var imageYScale = .02;
-	
+	var imageXScale = 0.04286;
+	var imageYScale = 0.04286;
 	var imageSpeed = Player.image_speed;
 	var imageAngle  = Player.image_angle;
 	var imageBlend  = Player.image_blend;
 	var imageAlpha  = Player.image_alpha;
-	Player.visible = true;
+	var prevSound = current_sound;
 
 	if(animDirection == Compass.West
 			|| animDirection == Compass.NorthWest
@@ -235,23 +227,38 @@ function HandleAnimation()
 	{	imageXScale = -imageXScale;
 	}
 	
+	
 	switch(animState)
 	{
 		default: 
 		case PlayerAnimState.Empty:
+			imageAngle = 0;
+			sprite = SpritePlayerIdle;
+			break;
 		case PlayerAnimState.Idle:
 			imageAngle = 0;
 			sprite = SpritePlayerIdle;
 			
+			if(current_sound != SoundIdle)
+			{	
+				current_sound = SoundIdle;
+				audio_play_sound(SoundIdle, 0, true);
+			}
+			
 			break;
-
 		case PlayerAnimState.Running:
 			sprite = SpritePlayerRun;
+			
+			if(current_sound != SoundRunning)
+			{	
+				current_sound = SoundRunning;
+				audio_play_sound(SoundRunning, 0, true);
+			}
 			
 			break;
 
 		case PlayerAnimState.Crouching:
-			sprite = SpritePlayerIdle;
+			sprite = SpritePlayerCrouch;
 			break;
 
 		case PlayerAnimState.Dashing:
@@ -290,6 +297,12 @@ function HandleAnimation()
 			angle -= BASE_ANGLE_OFFSET;
 		
 			imageAngle = angle;
+			
+			if(current_sound != SoundDash)
+			{	
+				current_sound = SoundDash;
+				audio_play_sound(SoundDash, 0, false);
+			}
 
 			break;
 
@@ -326,6 +339,13 @@ function HandleAnimation()
 			break;
 	}
 	
+	if(prevSound != current_sound)
+	{	
+		if(prevSound != pointer_null)
+		{	audio_pause_sound(prevSound);
+		}
+	}
+	
 	Player.sprite_index = sprite;
 	//Player.image_index  = 0;
 	
@@ -358,6 +378,8 @@ function GameInputSetup()
 	animDirection = Compass.NoDirection;
 	xMultiplier = 1;
 	yMultiplier = 1;
+	current_sound = pointer_null;
+	audio_play_sound(SoundDungeon, 0, true);
 }
 
 function GameInput()
