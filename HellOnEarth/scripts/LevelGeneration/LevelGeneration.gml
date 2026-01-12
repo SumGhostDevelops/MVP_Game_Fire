@@ -30,3 +30,4 @@ function generate_chunk(chunk_x) {
     
     ds_list_add(chunks, chunk_x);
 }
+

@@ -35,6 +35,11 @@ jumpCount = 0;
 jumpHoldTimer = 0;
 jumpHoldFrames = [15, 10];
 Grounded = true;
+scrollSpeed = 0;
+camTrailSpeed = .04;
+Health = 5;
+
+
 
 xSpd = 0;
 ySpd = 0;

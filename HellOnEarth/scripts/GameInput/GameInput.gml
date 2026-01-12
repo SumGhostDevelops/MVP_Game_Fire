@@ -81,7 +81,7 @@ function AnimationStateOwner()
 }
 
 function EndAnimationState()
-{	
+{
 	animState = PlayerAnimState.Empty;
 }
 
@@ -116,21 +116,24 @@ function Dash()
 	// Reset dash timer if we ground.
 	if(Grounded)
 	{	
-		//show_debug_message("Grounded");
 		dashTimer = DASH_MAX_TIME;
-
+		
 		return;
 	}
+	
 	
 	if(!keyboard_check(vk_shift))
 	{	return;
 	}
 	
-	
 	// Dash Ended.
 	if(keyboard_check_released(DashKeyBind))
 	{	
 		dashTimer = 0;
+		
+		if(AnimationStateOwner() == PlayerAnimState.Dashing)
+		{	EndAnimationState();
+		}
 		
 		return;
 	}
@@ -207,14 +210,6 @@ function Jump()
 function Handlers()
 {
 	SetAnimationState(PlayerAnimState.Idle);
-	
-	if((leftKey ||rightKey))
-	{	SetAnimationState(PlayerAnimState.Running);
-	}
-	if(Player.image_speed == 0){
-	SetAnimationState(PlayerAnimState.Idle);
-	}
-	
 	Dash();
 	Crouch();
 	Jump();
@@ -223,14 +218,16 @@ function Handlers()
 function HandleAnimation()
 {
 	var angle = ComputeCompassAngle(animDirection);
-	var sprite = pointer_null;
+	var sprite = PlayerAnimState.Idle;
 	
-	var imageXScale = .05;
-	var imageYScale =.05;
+	var imageXScale = .02;
+	var imageYScale = .02;
+	
 	var imageSpeed = Player.image_speed;
 	var imageAngle  = Player.image_angle;
 	var imageBlend  = Player.image_blend;
 	var imageAlpha  = Player.image_alpha;
+	Player.visible = true;
 
 	if(animDirection == Compass.West
 			|| animDirection == Compass.NorthWest
@@ -242,10 +239,10 @@ function HandleAnimation()
 	{
 		default: 
 		case PlayerAnimState.Empty:
-			break;
 		case PlayerAnimState.Idle:
 			imageAngle = 0;
 			sprite = SpritePlayerIdle;
+			
 			break;
 
 		case PlayerAnimState.Running:
@@ -254,7 +251,7 @@ function HandleAnimation()
 			break;
 
 		case PlayerAnimState.Crouching:
-			sprite = SpritePlayerCrouch;
+			sprite = SpritePlayerIdle;
 			break;
 
 		case PlayerAnimState.Dashing:
@@ -329,19 +326,19 @@ function HandleAnimation()
 			break;
 	}
 	
-	// ONLY change sprite + reset index
-	if (Player.sprite_index != sprite)
-	{
-		Player.visible = true;
-		Player.sprite_index = sprite;
-		Player.image_index  = 0;
-	}
+	Player.sprite_index = sprite;
+	//Player.image_index  = 0;
 	
 	/*
 	show_debug_message(Player.sprite_index);
+	show_debug_message(imageSpeed);
+	show_debug_message(imageXScale);
+	show_debug_message(imageYScale);
+	show_debug_message(imageAlpha);
 	show_debug_message(Player.image_xscale);
 	show_debug_message(Player.image_yscale);
 	*/
+	
 	Player.image_speed = imageSpeed;
 	Player.image_xscale = imageXScale;
 	Player.image_yscale = imageYScale;
@@ -401,13 +398,19 @@ function PlayerPhysics()
 	//Direction 
 	moveDir = rightKey - leftKey;
 	
+	if(rightKey || leftKey)
+	{	SetAnimationState(PlayerAnimState.Running);
+	}
+	else if(AnimationStateOwner() == PlayerAnimState.Running)
+	{	EndAnimationState();
+	}
 	//Movement
 
 	//X Pos
 	xSpd = moveDir * moveSpd * xMultiplier;
 
 	// collision
-	var _subPixel = .1;
+	var _subPixel = .01;
 
 	if(place_meeting(x + xSpd, y, Ground))
 	{

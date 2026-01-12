@@ -1,4 +1,5 @@
 GameInput()
+
 show_debug_message("sprite=" + string(Player.sprite_index)
     + " w=" + string(sprite_get_width(Player.sprite_index))
     + " h=" + string(sprite_get_height(Player.sprite_index))
