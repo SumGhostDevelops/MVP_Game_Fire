@@ -39,6 +39,9 @@
   "resourceVersion":"2.0",
   "solid":false,
   "spriteId":null,
-  "spriteMaskId":null,
+  "spriteMaskId":{
+    "name":"SpritePlayerIdle",
+    "path":"sprites/SpritePlayerIdle/SpritePlayerIdle.yy",
+  },
   "visible":true,
 }
