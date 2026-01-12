@@ -396,8 +396,7 @@ function PlayerPhysics()
 	moveDir = rightKey - leftKey;
 	
 	if(rightKey || leftKey)
-	{	
-		SetAnimationState(PlayerAnimState.Running);
+	{	SetAnimationState(PlayerAnimState.Running);
 	}
 	else if(AnimationStateOwner() == PlayerAnimState.Running)
 	{	EndAnimationState();
