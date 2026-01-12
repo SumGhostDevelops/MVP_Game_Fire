@@ -220,8 +220,8 @@ function HandleAnimation()
 	var angle = ComputeCompassAngle(animDirection);
 	var sprite = pointer_null;
 	
-	var imageXScale = 0.035;
-	var imageYScale = 0.035;
+	var imageXScale = 0.04286;
+	var imageYScale = 0.04286;
 	var imageSpeed = Player.image_speed;
 	var imageAngle  = Player.image_angle;
 	var imageBlend  = Player.image_blend;
@@ -408,7 +408,7 @@ function PlayerPhysics()
 	xSpd = moveDir * moveSpd * xMultiplier;
 
 	// collision
-	var _subPixel = .1;
+	var _subPixel = .01;
 
 	if(place_meeting(x + xSpd, y, Ground))
 	{
