@@ -25,9 +25,9 @@ enum Compass
 	West,
 }
 
-function IsAnimationDone(animationObject)
+function IsAnimationDone()
 {
-	return animationObject.image_index >= animationObject.image_number - 1;
+	return image_index >= image_number - 1;
 }
 
 function ComputeCompassAngle(c) 
@@ -65,7 +65,7 @@ function ComputeCompassIsCardinal(c)
 function SetAnimationState(state)
 {
 	// If the current state is not high priority enough skip it.
-	if(!IsAnimationDone(Player))
+	if(!IsAnimationDone())
 	{
 		if(state < animState)
 		{	return;
@@ -219,10 +219,20 @@ function Handlers()
 {
 	SetAnimationState(PlayerAnimState.Idle);
 	Dash();
+	Death();
 	Crouch();
 	Jump();
 }
 
+function Death(){
+	if (Health < 1){
+		
+		instance_destroy(Player);
+	
+	}
+
+
+}
 function HandleAnimation()
 {
 	var angle = ComputeCompassAngle(animDirection);
@@ -230,11 +240,12 @@ function HandleAnimation()
 	
 	var imageXScale = 0.04286;
 	var imageYScale = 0.04286;
-	var imageSpeed = Player.image_speed;
-	var imageAngle  = Player.image_angle;
-	var imageBlend  = Player.image_blend;
-	var imageAlpha  = Player.image_alpha;
+	var imageSpeed = image_speed;
+	var imageAngle  = image_angle;
+	var imageBlend  = image_blend;
+	var imageAlpha  = image_alpha;
 	var prevSound = current_sound;
+	
 
 	if(animDirection == Compass.West
 			|| animDirection == Compass.NorthWest
@@ -277,7 +288,7 @@ function HandleAnimation()
 			sprite = SpritePlayerCrouch;
 
 			if(image_index > 19 && image_index > 6)
-			{	Player.image_index = 6;
+			{	image_index = 6;
 			}
 			
 			if(current_sound != SoundCrouch)
@@ -329,7 +340,7 @@ function HandleAnimation()
 			if(current_sound != SoundDash)
 			{	
 				current_sound = SoundDash;
-				audio_play_sound(SoundDash, 0, false, 15);
+				audio_play_sound(SoundDash, 0, false, -15);
 			}
 
 			break;
@@ -381,7 +392,6 @@ function HandleAnimation()
 				current_sound = SoundRoll;
 				audio_play_sound(SoundRoll, 0, true);
 			}
-
 		
 			break;
 	}
@@ -393,27 +403,27 @@ function HandleAnimation()
 		}
 	}
 	
-	Player.sprite_index = sprite;
-	//Player.image_index  = 0;
+	sprite_index = sprite;
+	//image_index  = 0;
 	
 	/*
-	show_debug_message(Player.sprite_index);
+	show_debug_message(sprite_index);
 	show_debug_message(imageSpeed);
 	show_debug_message(imageXScale);
 	show_debug_message(imageYScale);
 	show_debug_message(imageAlpha);
-	show_debug_message(Player.image_xscale);
-	show_debug_message(Player.image_yscale);
+	show_debug_message(image_xscale);
+	show_debug_message(image_yscale);
 	*/
 	
-	Player.image_speed = imageSpeed;
-	Player.image_xscale = imageXScale;
-	Player.image_yscale = imageYScale;
-	Player.image_angle = imageAngle;
-	Player.image_blend = imageBlend;
-	Player.image_alpha = imageAlpha;
-
+	image_speed = imageSpeed;
+	image_xscale = imageXScale;
+	image_yscale = imageYScale;
+	image_angle = imageAngle;
+	image_blend = imageBlend;
+	image_alpha = imageAlpha;
 }
+
 
 function GameInputSetup()
 {

@@ -22,5 +22,5 @@
   "resourceVersion":"2.0",
   "sampleRate":5512,
   "soundFile":"SoundDash.mp3",
-  "volume":1.0,
+  "volume":0.72,
 }
