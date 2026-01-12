@@ -1,5 +1,5 @@
 
-spr_bg = Title_2;
+
 
 
 btn1_text = "START";

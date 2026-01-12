@@ -2,8 +2,6 @@ var gw = display_get_gui_width();
 var gh = display_get_gui_height();
 
 
-draw_sprite_stretched(spr_bg, 0, 0, 0, gw, gh);
-
 
 
 draw_set_font(font_btn);
@@ -26,8 +24,8 @@ function DrawButtonLabel(b, text, isHover)
 
     if (isHover)
     {
-        draw_set_alpha(0.12);
-        draw_set_color(c_black);
+        draw_set_alpha(0.5);
+        draw_set_color(c_blue);
         draw_rectangle(b.x1, b.y1, b.x2, b.y2, false);
         draw_set_alpha(1);
     }
