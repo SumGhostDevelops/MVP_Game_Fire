@@ -1,5 +1,5 @@
 GameInput()
-
+timer_step++;
 show_debug_message("sprite=" + string(sprite_index)
     + " w=" + string(sprite_get_width(sprite_index))
     + " h=" + string(sprite_get_height(sprite_index))

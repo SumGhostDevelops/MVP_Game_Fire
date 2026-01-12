@@ -37,7 +37,8 @@ jumpHoldFrames = [15, 10];
 Grounded = true;
 scrollSpeed = 0;
 camTrailSpeed = .04;
-Health = 1;
+Health = 100;
+timer_step = 0;
 
 
 

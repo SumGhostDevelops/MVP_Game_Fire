@@ -219,16 +219,23 @@ function Handlers()
 {
 	SetAnimationState(PlayerAnimState.Idle);
 	Dash();
-	Death();
+	PlayerHealth();
 	Crouch();
 	Jump();
 }
 
-function Death(){
-	if (Health < 1){
-		
-		instance_destroy(Player);
+function PlayerHealth(){
 	
+	if(timer_step % 10000 == 0 && Health < 100){
+	
+	Health++;
+	
+	}
+	
+	
+	if (Health < 1){
+		audio_pause_all();
+		instance_destroy(Player);
 	}
 
 
