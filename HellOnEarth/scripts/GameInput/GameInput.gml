@@ -208,8 +208,11 @@ function Handlers()
 {
 	SetAnimationState(PlayerAnimState.Idle);
 	
-	if(keyboard_check(vk_right) || keyboard_check(vk_left))
+	if((leftKey ||rightKey))
 	{	SetAnimationState(PlayerAnimState.Running);
+	}
+	if(Player.image_speed == 0){
+	SetAnimationState(PlayerAnimState.Idle);
 	}
 	
 	Dash();
@@ -222,8 +225,8 @@ function HandleAnimation()
 	var angle = ComputeCompassAngle(animDirection);
 	var sprite = pointer_null;
 	
-	var imageXScale = .030;
-	var imageYScale = .030;
+	var imageXScale = 0.0212;
+	var imageYScale = 0.0212;
 	var imageSpeed = Player.image_speed;
 	var imageAngle  = Player.image_angle;
 	var imageBlend  = Player.image_blend;
@@ -237,10 +240,12 @@ function HandleAnimation()
 	
 	switch(animState)
 	{
-		default:
+		default: 
 		case PlayerAnimState.Empty:
+			break;
 		case PlayerAnimState.Idle:
-			sprite = SpritePlayerRoll;
+			imageAngle = 0;
+			sprite = SpritePlayerIdle;
 			break;
 
 		case PlayerAnimState.Running:
@@ -249,7 +254,7 @@ function HandleAnimation()
 			break;
 
 		case PlayerAnimState.Crouching:
-			sprite = SpritePlayerRun;
+			sprite = SpritePlayerCrouch;
 			break;
 
 		case PlayerAnimState.Dashing:

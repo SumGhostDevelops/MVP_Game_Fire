@@ -49,6 +49,7 @@
     {"id":{"name":"Sprite5","path":"sprites/Sprite5/Sprite5.yy",},},
     {"id":{"name":"SpritePlayerCrouch","path":"sprites/SpritePlayerCrouch/SpritePlayerCrouch.yy",},},
     {"id":{"name":"SpritePlayerDash","path":"sprites/SpritePlayerDash/SpritePlayerDash.yy",},},
+    {"id":{"name":"SpritePlayerIdle","path":"sprites/SpritePlayerIdle/SpritePlayerIdle.yy",},},
     {"id":{"name":"SpritePlayerJump","path":"sprites/SpritePlayerJump/SpritePlayerJump.yy",},},
     {"id":{"name":"SpritePlayerRoll","path":"sprites/SpritePlayerRoll/SpritePlayerRoll.yy",},},
     {"id":{"name":"SpritePlayerRun","path":"sprites/SpritePlayerRun/SpritePlayerRun.yy",},},
