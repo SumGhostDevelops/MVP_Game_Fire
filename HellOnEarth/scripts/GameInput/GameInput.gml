@@ -91,27 +91,37 @@ function Crouch()
 
     if (keyboard_check(key))
     {
-        SetAnimationState(PlayerAnimState.Crouching);
-        xMultiplier *= 0.3;
+		if(xSpd == 0){
+		 SetAnimationState(PlayerAnimState.Crouching);
+		 xMultiplier *= 0.3;
+		}else{
+			SetAnimationState(PlayerAnimState.Sliding);
+			xMultiplier *= 0.9;
+		}
+        
+        
+		
     }
+	
    
 }
 
 function Slide()
 {
+
 	SetAnimationState(PlayerAnimState.Sliding);
 }
 
 function Dash()
 {	
-	var DashKeyBind = vk_shift
+	var DashKeyBind = vk_shift;
 	
 	// Reset dash timer if we ground.
 	if(Grounded)
 	{	
 		dashTimer = DASH_MAX_TIME;
-		
-		return;
+		dashCount = 0;
+	
 	}
 	
 	
@@ -121,12 +131,20 @@ function Dash()
 	
 	// Dash Ended.
 	if(keyboard_check_released(DashKeyBind))
-	{	
-		dashTimer = 0;
+	{		
+		
+		if(dashCount < dashMaxCount && dashTimer <= 0){
+			
+			dashTimer = DASH_MAX_TIME;
+			dashCount++;
 		
 		if(AnimationStateOwner() == PlayerAnimState.Dashing)
 		{	EndAnimationState();
 		}
+		
+	
+	
+	}
 		
 		return;
 	}
@@ -138,39 +156,38 @@ function Dash()
 	
 		
 		switch(angle)
-		{
-			case 0:
-				yMultiplier /= -.5 * _speed;
-				break;
-			case 45:
-				yMultiplier /= _speed * -.75;
-				xMultiplier *= _speed / 1.5;
-				break;
-			case 90:
-				xMultiplier *= _speed;
-				break;
-			case 135:
-				yMultiplier *= _speed / 1.5;
-				xMultiplier *= _speed / 1.5;
-				break;
-			case 180:
-				yMultiplier *= _speed;
-				break;
-			case 225:
-				yMultiplier *= _speed / 1.5;
-				xMultiplier *= _speed / 1.5;
-				break;
-			case 270:
-				xMultiplier *= _speed;
-				break;
-			case 315:
-				yMultiplier /= _speed * -.75;
-				xMultiplier *= _speed / 1.5;
-				break;
-		}
-		SetAnimationState(PlayerAnimState.Dashing);
+{
+    case 0: // North
+        yMultiplier *= -_speed/3;
+        break;
+    case 45: // NorthEast
+        yMultiplier *= -(_speed/3) * 0.707; // diagonal component
+        xMultiplier *= (_speed/3) * 0.707;
+        break;
+    case 90: // East
+        xMultiplier *= _speed;
+        break;
+    case 135: // SouthEast
+        yMultiplier *= _speed * 0.707;
+        xMultiplier *= (_speed/3) * 0.707;
+        break;
+    case 180: // South
+        yMultiplier *= _speed*2;
+        break;
+    case 225: // SouthWest
+        yMultiplier *= (_speed/3) * 0.707;
+        xMultiplier *= -(_speed/3) * 0.707; // negative for left
+        break;
+    case 270: // West
+        xMultiplier *= _speed;
+        break;
+    case 315: // NorthWest
+        yMultiplier *= -(_speed/3) * 0.707;
+        xMultiplier *= -(_speed/3) * 0.707; // negative for left
+        break;
+}
+	SetAnimationState(PlayerAnimState.Dashing);
 	}
-	
 	dashTimer -= delta_time;
 }
 
@@ -258,7 +275,12 @@ function HandleAnimation()
 			break;
 
 		case PlayerAnimState.Crouching:
+	
 			sprite = SpritePlayerCrouch;
+
+			if(Player.image_index > 19){
+			Player.image_index = 6;
+			}
 			break;
 
 		case PlayerAnimState.Dashing:
@@ -335,6 +357,11 @@ function HandleAnimation()
 
 		case PlayerAnimState.Sliding:
 			sprite = SpritePlayerRoll;
+			
+			
+			if(image_index > 40){
+			image_index = 9;
+			}
 		
 			break;
 	}
@@ -365,6 +392,7 @@ function HandleAnimation()
 	Player.image_angle = imageAngle;
 	Player.image_blend = imageBlend;
 	Player.image_alpha = imageAlpha;
+
 }
 
 function GameInputSetup()
@@ -374,6 +402,8 @@ function GameInputSetup()
 	jumpKeyBufferedTimer = 0;
 	DASH_MAX_TIME = (1_000_000) * .15; // (deltatime thing) x seconds
 	dashTimer = 0;
+	dashCount = 0;
+	dashMaxCount = 0;
 	animState = PlayerAnimState.Idle;
 	animDirection = Compass.NoDirection;
 	xMultiplier = 1;
